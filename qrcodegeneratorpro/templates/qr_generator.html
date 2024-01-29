@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>QR Code Generator</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+  <style>
+    body {
+      background-color: silver;
+    }
+
+    .container {
+      background-color: #8997ad;
+      color: white;
+      border-radius: 5%;
+      padding: 1em;
+    }
+
+    .header {
+      color: white;
+      text-align: center;
+
+
+      font-size: 34px;
+      font-weight: bold;
+    }
+
+    .download-share-buttons {
+      display: flex;
+      justify-content: center;
+      margin-top: 1em;
+    }
+
+    .download-share-buttons button {
+      margin-right: 0.5em;
+    }
+.a{
+
+}
+
+  </style>
+</head>
+<body>
+  <header >
+    <h1 class="header">QR Code Generator</h1>
+  </header>
+  <div class="text-right">
+
+
+  <a href="{% url 'logoutpage'%}" class="btn btn-danger">logout</a>
+    </div>
+  <div class="container shadow" style="width:600px; margin-top: 1em; ">
+    <form method="post">
+      {% csrf_token %}
+      <h3><center >Enter text/link to generate a QR code</center></h3>
+
+      <div class="input-group mb-1">
+        <span class="input-group-text" id="inputGroup-sizing-default">Text/Link:</span>
+        <input type="text" class="form-control" aria-describedby="inputGroup-sizing-default" name="qr_text" autofocus>
+      </div>
+      <div class="input-group mb-3">
+        <input type="submit" style="max-width: 200px; margin: auto" class="form-control">
+      </div>
+    </form>
+    {% if qr_image_base64 %}
+
+    {% endif %}
+    <div class="input-group mb-3">
+      <div style="margin: auto">
+        {% if qr_image_base64 %}
+        <img src="data:image/jpeg;base64,{{ qr_image_base64 }}" alt="QR Code">
+
+          <div class="download-share-buttons">
+            <button class="btn btn-primary" onclick="downloadQR()">Download</button>
+            <button class="btn btn-primary" onclick="shareQR()">Share</button>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <script>
+  function downloadQR() {
+    const qrCodeUrl = 'data:image/jpeg;base64,{{ qr_image_base64 }}';  // Changed from PNG to JPEG
+
+    const link = document.createElement('a');
+    link.href = qrCodeUrl;
+    link.download = 'qr_code.jpg';  // Changed file extension to .jpg
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+function shareQR() {
+  const qrCodeUrl = 'data:image/jpeg;base64,{{ qr_image_base64 }}';  // Changed from PNG to JPEG
+
+  fetch(qrCodeUrl)
+      .then(res => res.blob())
+      .then(blob => {
+          const file = new File([blob], 'qr_code.jpg', { type: 'image/jpeg' });  // File of type JPEG
+          if (navigator.share) {
+              navigator.share({
+                  files: [file],
+                  title: 'QR Code',
+                  text: 'Check out this QR Code'
+              })
+              .then(() => console.log('Shared successfully'))
+              .catch((error) => console.log('Error sharing:', error));
+          } else {
+              alert('Web Share API not supported in this browser');
+          }
+      });
+}
+
+</script>
+</body>
+</html>

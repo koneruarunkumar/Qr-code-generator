@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+    <style>
+    body {
+       background: linear-gradient(to right, #ff6b6b,silver);
+       color: #fff;
+       font-family: 'Arial', sans-serif;
+       background-size: cover;
+       background-blend-mode: overlay;
+       position: relative;
+   }
+
+   body::before {
+       content: '';
+       position: absolute;
+       top: 0;
+       left: 0;
+       width: 0;
+       height: 0;
+       border-style: solid;
+       border-width: 0 0 200px 200px; /* Adjust the size of the triangle */
+       border-color: transparent transparent transparent rgba(255, 255, 255, 0.3); /* Adjust the color and transparency */
+       z-index: 1;
+   }
+
+   body::after {
+       content: '';
+       position: absolute;
+       bottom: -150px;
+       right: 0;
+
+       width: 0;
+       height: 50px;
+       border-style: solid;
+       border-width: 200px 200px 0 0; /* Adjust the size of the triangle */
+       border-color: rgba(255, 255, 255, 0.3) transparent transparent transparent; /* Adjust the color and transparency */
+       z-index: 1;
+   }
+
+   .container {
+       max-width: 400px;
+       margin: 50px auto;
+       padding: 40px;
+       border-radius: 20px; /* Adjust the border-radius to match the body or customize separately */
+       box-shadow: 0px 0px 10px 0px #000;
+       background-color: #833ab4;
+       position: relative;
+       z-index: 2;
+   }
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .btn-login {
+            background: linear-gradient(to right, #833ab4, #fd1d1d, #fcb045);
+            border: none;
+        }
+
+        .btn-login:hover {
+            background: linear-gradient(to right, #fd1d1d, #fcb045, #833ab4);
+        }
+
+        .form-control {
+            border: 1px solid #fff;
+            color: #fff;
+            background: transparent;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        .password-container {
+          position: relative;
+          margin-bottom: 15px;
+      }
+
+      .password-input {
+          padding-right: 30px;
+      }
+
+      .toggle-password {
+          position: absolute;
+          right: 5px;
+          top: 70%;
+          transform: translateY(-50%);
+          cursor: pointer;
+      }
+
+    </style>
+    <title>Login Page</title>
+</head>
+<body>
+<h2 class="text-center">Quick QR code Generating Here!!! </h2>
+<div class="container">
+    <form method="POST">
+      {%csrf_token%}
+      {% if messages%}
+      {% for message in messages%}
+      <h6 class="text-warrning">{{message}}</h6>
+      {% endfor %}
+      {% endif %}
+        <h2 class="text-center">Login</h2>
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" class="form-control" id="username" name="username" required>
+        </div>
+        <div class="password-container">
+                <label for="" >Password:</label>
+                <input type="password" name="password" value="" id="password" class="form-control password-input">
+                <span class="toggle-password" onclick="togglePasswordVisibility('password')">🔒</span>
+          </div>
+
+        <input type="submit" class="btn btn-primary btn-block btn-login" value="Login">
+
+    </form><br>
+    <script>
+              function togglePasswordVisibility(inputId) {
+                  const passwordInput = document.getElementById(inputId);
+                  const type = passwordInput.type === 'password' ? 'text' : 'password';
+                  passwordInput.type = type;
+              }
+          </script>
+
+    <p>I don't have an account <a href="{% url 'registratonPage'%}" class=" btn-outline-dark">Register</a>Here!!! </p>
+</div>
+
+</body>
+</html>
